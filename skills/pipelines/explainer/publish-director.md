@@ -109,9 +109,28 @@ exports/
       concept.json          # Thumbnail concept (or the copied thumbnail image)
 ```
 
-`export_bundle` is a local, offline packager — it does not upload. A networked
-publisher (e.g. a YouTube uploader) would be a separate `publish`-capability
-provider.
+`export_bundle` is a local, offline packager — it does not upload.
+
+### Step 5b (optional): Upload to YouTube / Instagram
+
+Two networked `publish` providers can post the bundle directly:
+
+- `youtube_upload` — uploads to the user's channel (YouTube Data API v3). Takes
+  the same `title`, `description`, `tags`, `hashtags`, `chapters` and
+  `thumbnail_path`, plus `visibility` (default `private`) and `publish_at` for a
+  scheduled release.
+- `instagram_reels` — posts a vertical render as a Reel (Instagram Graph API).
+  Builds the caption from `title` + `description` + `hashtags` unless `caption`
+  is given. Reels are **public immediately** and cannot be scheduled via the API.
+
+Only offer these when their status is `available` (credentials in `.env`).
+Call them first **without** `confirm_publish` — they return a `draft`
+publish_log plus the exact request — and show that to the user. Set
+`confirm_publish: true` only after the user explicitly approves posting. Merge
+each tool's `publish_log.entries` into the stage's `publish_log`.
+
+Outside a pipeline run, `python scripts/publish_video.py <export_dir> --youtube
+--instagram [--yes]` does the same from a finished export bundle.
 
 ### Step 6: Build Publish Log
 
