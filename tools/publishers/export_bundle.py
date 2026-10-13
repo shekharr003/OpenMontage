@@ -11,8 +11,8 @@ metadata the publish-director skill prepares and writes a self-contained export
 bundle a creator can hand to any platform, returning a validated `publish_log`
 entry with `status: "exported"`.
 
-A networked publisher (e.g. a YouTube uploader) can be added later as a separate
-`provider` under the same `publish` capability.
+Networked publishers live alongside it under the same `publish` capability:
+`youtube_upload` and `instagram_reels`.
 """
 
 from __future__ import annotations
@@ -64,7 +64,7 @@ class ExportBundle(BaseTool):
         "offline / no-API-key publishing",
     ]
     not_good_for = [
-        "uploading directly to YouTube/TikTok/etc. (no network publish)",
+        "uploading directly to a platform (use youtube_upload / instagram_reels)",
         "generating SEO metadata or thumbnails (the publish-director prepares those)",
     ]
 
